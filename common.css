@@ -1,7 +1,9 @@
 body *{user-select:none;-moz-user-select:none;-khtml-user-select:none;-webkit-user-select:none;-o-user-select:none;font-family:monospace}
 body{overflow:hidden;position:fixed;margin:0;height:100vh;background:#000}
 ::-webkit-scrollbar{display:none}
-button:focus{outline:0!important}
+.btn:focus,.btn:active {
+   outline: none !important;
+}
 #trainer {
     position: absolute;
     left: 50%;
