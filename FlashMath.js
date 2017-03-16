@@ -5,9 +5,9 @@ function Engine(name) {
         target: "numbers",
         text: "Numbers:",
         value: 5,
-        min: 2,
-        step: 1,
-        MAX: 100
+        min: 5,
+        step: 5,
+        MAX: 50
     };
     this.digits = {
         type: "range",
@@ -16,16 +16,16 @@ function Engine(name) {
         value: 2,
         min: 1,
         step: 1,
-        MAX: 3
+        MAX: 4
     };
     this.speed = {
         type: "range",
-        target: "stimulus",
+        target: "speed",
         text: "Speed:",
         value: 1500,
-        min: 500,
-        step: 100,
-        MAX: 3000,
+        min: 250,
+        step: 250,
+        MAX: 2500,
         "char": "ms"
     };
     this.operation = {
