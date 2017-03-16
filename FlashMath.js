@@ -157,8 +157,8 @@ Engine.prototype.clamp = function (number) {
 };
 Engine.prototype.generateArray = function () {
     this.series = [this.randomNumber(0)];
-    var partial = this.series[0],
-        tmp;
+    var partial = this.series[0];
+    var tmp;
     for (var i = 1; i < this.numbers.value; i++) {
         tmp = this.randomNumber((this.operation.value === "+/-") ? true : false, partial);
         this.series.push(tmp);
@@ -178,21 +178,26 @@ Engine.prototype.stop = function () {
             this.reset();
             return;
         }
-        if (this.i > 0) alert("Already stopped");
+        if (this.i > 0) {
+			alert("Already stopped");
+		}
     }, "Nothing to Stop, click on New");
 };
 Engine.prototype.reset = function () {
     var that = this;
     this.running = false;
-    $("#trainer").text("");
+	$("#trainer").text("");
     for (var i = 0; i < this.timeouts.length; i++) {
         clearTimeout(this.timeouts[i]);
         console.log("cleared timeout #" + this.timeouts[i]);
     }
 };
 Engine.prototype.if_A_series_EXISTS = function (func, s) {
-    if (this.series.length > 0) func.bind(this)();
-    else alert(s);
+    if (this.series.length > 0) {
+		func.bind(this)();
+	} else {
+		alert(s);
+	}
 };
 Engine.prototype.if_NOT_running_DO = function (func) {
     if (!this.running) {
@@ -227,10 +232,16 @@ Engine.prototype.check = function () {
             return;
         }
         if (!this.running && this.i == this.series.length) {
-            if (Number($("#answer").val()) == this.series.reduce(function (a, b) {
-                    return a + b;
-                }, 0)) $("#trainer").text("Right");
-            else $("#trainer").text("Wrong");
+            if (Number($("#answer").val()) == this.series.reduce(function (a, b) { return a + b; }, 0)) {
+				$("#trainer").text("Right");
+			} else {
+				$("#trainer").text("Wrong");
+			}
+			this.timeouts.push(
+				setTimeout(function () {
+					$("#trainer").text("");
+				}, 3000)
+			);
         } else {
             alert("You have not finished watching the series");
         }
@@ -240,6 +251,11 @@ Engine.prototype.showResult = function () {
     $("#trainer").text(this.series.reduce(function (a, b) {
         return a + b;
     }));
+	this.timeouts.push(
+		setTimeout(function () {
+			$("#trainer").text("");
+		}, 3000)
+	);
 };
 Engine.prototype.waitCallback = function (s, callback) {
     _this = this;
@@ -251,8 +267,11 @@ Engine.prototype.waitCallback = function (s, callback) {
 };
 Engine.prototype.showNumber = function () {
     if (this.i < this.series.length) {
-        if (this.i != 0) $("#trainer").text((this.series[this.i] > 0) ? "+" + this.series[this.i] : this.series[this.i]);
-        else $("#trainer").text(this.series[this.i]);
+        if (this.i != 0) {
+			$("#trainer").text((this.series[this.i] > 0) ? "+" + this.series[this.i] : this.series[this.i]);
+		} else {
+			$("#trainer").text(this.series[this.i]);
+		}
         this.waitCallback(this.speed.value / 2, this.hideNumber);
     } else {
         this.running = false;
