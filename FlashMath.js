@@ -176,6 +176,7 @@ Engine.prototype.stop = function () {
 	this.if_A_series_EXISTS(function () {
         if (this.running) {
             this.reset();
+			$("#trainer").text("");
             return;
         }
         if (this.i > 0) {
@@ -186,11 +187,18 @@ Engine.prototype.stop = function () {
 Engine.prototype.reset = function () {
     var that = this;
     this.running = false;
-	$("#trainer").text("");
     for (var i = 0; i < this.timeouts.length; i++) {
         clearTimeout(this.timeouts[i]);
         console.log("cleared timeout #" + this.timeouts[i]);
     }
+};
+Engine.prototype.temporizedCleaner = function () {
+	this.reset();
+	this.timeouts.push(
+		setTimeout(function () {
+			$("#trainer").text("");
+		}, 2000)
+	);
 };
 Engine.prototype.if_A_series_EXISTS = function (func, s) {
     if (this.series.length > 0) {
@@ -237,11 +245,7 @@ Engine.prototype.check = function () {
 			} else {
 				$("#trainer").text("Wrong");
 			}
-			this.timeouts.push(
-				setTimeout(function () {
-					$("#trainer").text("");
-				}, 3000)
-			);
+			this.temporizedCleaner();
         } else {
             alert("You have not finished watching the series");
         }
@@ -251,11 +255,7 @@ Engine.prototype.showResult = function () {
     $("#trainer").text(this.series.reduce(function (a, b) {
         return a + b;
     }));
-	this.timeouts.push(
-		setTimeout(function () {
-			$("#trainer").text("");
-		}, 3000)
-	);
+	this.temporizedCleaner();
 };
 Engine.prototype.waitCallback = function (s, callback) {
     _this = this;
@@ -283,4 +283,4 @@ Engine.prototype.hideNumber = function () {
     $("#trainer").text("");
     this.i++;
     this.waitCallback(this.speed.value / 2, this.showNumber);
-}
+};
