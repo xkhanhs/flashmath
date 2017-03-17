@@ -1,5 +1,5 @@
 function Engine(name) {
-	this.name = name;
+    this.name = name;
     this.numbers = {
         type: "range",
         target: "numbers",
@@ -109,14 +109,14 @@ Engine.prototype.populateSiteWrap = function () {
     var s = "";
     s += "<div id=\"trainer\"></div>";
     s += "<div id=\"dashboard\">";
-    s += 	"<div>";
-    s += 		"<input class=\"btn btn-standard\" type=\"button\" value=\"New\" onclick=\"" + this.name + ".new();\"/>";
-    s += 		"<input class=\"btn btn-standard\" type=\"button\" value=\"Replay\" onclick=\"" + this.name + ".replay();\"/>";
-    s += 		"<input class=\"btn btn-standard\" type=\"button\" value=\"Stop\" onclick=\"" + this.name + ".stop();\"/>";
-    s += 		"<input class=\"btn btn-standard\" type=\"button\" value=\"Result\" onclick=\"" + this.name + ".showResult();\" disabled/>";
-    s += 	"</div>";
-    s += 	"<input type=\"text\" id=\"answer\" placeholder=\"Click here to answer...\"/>";
-	s += 	"<input class=\"btn btn-standard\" type=\"button\" value=\"Check\" onclick=\"" + this.name + ".check();\"/>";
+    s += "<div>";
+    s += "<input class=\"btn btn-standard\" type=\"button\" value=\"New\" onclick=\"" + this.name + ".new();\"/>";
+    s += "<input class=\"btn btn-standard\" type=\"button\" value=\"Replay\" onclick=\"" + this.name + ".replay();\"/>";
+    s += "<input class=\"btn btn-standard\" type=\"button\" value=\"Stop\" onclick=\"" + this.name + ".stop();\"/>";
+    s += "<input class=\"btn btn-standard\" type=\"button\" value=\"Result\" onclick=\"" + this.name + ".showResult();\" disabled/>";
+    s += "</div>";
+    s += "<input type=\"text\" id=\"answer\" placeholder=\"Click here to answer...\"/>";
+    s += "<input class=\"btn btn-standard\" type=\"button\" value=\"Check\" onclick=\"" + this.name + ".check();\"/>";
     s += "</div>";
     $("#site-wrap").append(s);
 };
@@ -126,13 +126,21 @@ Engine.prototype.markupInit = function () {
     this.populateSiteWrap();
 };
 Engine.prototype.eventsInit = function () {
-	$("input[type=text]").each(function() {
-		$(this).numpad({
-			hidePlusMinusButton: true,
-			hideDecimalButton: true	
-		});
-	});
-	this.series = [];
+    $.fn.numpad.defaults.gridTpl = '<table class="table modal-content"></table>';
+    $.fn.numpad.defaults.backgroundTpl = '<div class="modal-backdrop in"></div>';
+    $.fn.numpad.defaults.displayTpl = '<input disabled type="text" class="form-control" />';
+    $.fn.numpad.defaults.buttonNumberTpl = '<button type="button" class="btn btn-default"></button>';
+    $.fn.numpad.defaults.buttonFunctionTpl = '<button type="button" class="btn" style="width: 100%;"></button>';
+    $.fn.numpad.defaults.onKeypadCreate = function () {
+        $(this).find(".done").addClass("btn-primary");
+    };
+    $("input[type=text]").each(function () {
+        $(this).numpad({
+            hidePlusMinusButton: true,
+            hideDecimalButton: true
+        });
+    });
+    this.series = [];
     this.timeouts = [];
     this.reset();
 };
@@ -167,22 +175,22 @@ Engine.prototype.generateArray = function () {
     return this.series;
 };
 Engine.prototype.start = function () {
-	$("#answer").val("");
+    $("#answer").val("");
     $("input[value='Result']").prop("disabled", true);
     this.i = 0;
     this.running = true;
     this.showNumber();
 };
 Engine.prototype.stop = function () {
-	this.if_A_series_EXISTS(function () {
+    this.if_A_series_EXISTS(function () {
         if (this.running) {
             this.reset();
-			$("#trainer").text("");
+            $("#trainer").text("");
             return;
         }
         if (this.i > 0) {
-			alert("Already stopped");
-		}
+            alert("Already stopped");
+        }
     }, "Nothing to Stop, click on New");
 };
 Engine.prototype.reset = function () {
@@ -193,19 +201,17 @@ Engine.prototype.reset = function () {
     }
 };
 Engine.prototype.temporizedCleaner = function () {
-	this.reset();
-	this.timeouts.push(
-		setTimeout(function () {
-			$("#trainer").text("");
-		}, 2000)
-	);
+    this.reset();
+    this.timeouts.push(setTimeout(function () {
+        $("#trainer").text("");
+    }, 2000));
 };
 Engine.prototype.if_A_series_EXISTS = function (func, s) {
     if (this.series.length > 0) {
-		func.bind(this)();
-	} else {
-		alert(s);
-	}
+        func.bind(this)();
+    } else {
+        alert(s);
+    }
 };
 Engine.prototype.if_NOT_running_DO = function (func) {
     if (!this.running) {
@@ -227,7 +233,7 @@ Engine.prototype.replay = function () {
     $("input[value='Result']").prop("disabled", true);
     this.if_A_series_EXISTS(function () {
         that.if_NOT_running_DO(function () {
-			this.reset();
+            this.reset();
             this.start();
         });
     }, "Nothing to Repeat, click on New");
@@ -240,12 +246,14 @@ Engine.prototype.check = function () {
             return;
         }
         if (!this.running && this.i == this.series.length) {
-            if (Number($("#answer").val()) == this.series.reduce(function (a, b) { return a + b; }, 0)) {
-				$("#trainer").text("Right");
-			} else {
-				$("#trainer").text("Wrong");
-			}
-			this.temporizedCleaner();
+            if (Number($("#answer").val()) == this.series.reduce(function (a, b) {
+                    return a + b;
+                }, 0)) {
+                $("#trainer").text("Right");
+            } else {
+                $("#trainer").text("Wrong");
+            }
+            this.temporizedCleaner();
         } else {
             alert("You have not finished watching the series");
         }
@@ -255,23 +263,21 @@ Engine.prototype.showResult = function () {
     $("#trainer").text(this.series.reduce(function (a, b) {
         return a + b;
     }));
-	this.temporizedCleaner();
+    this.temporizedCleaner();
 };
 Engine.prototype.waitCallback = function (s, callback) {
     var that = this;
-    this.timeouts.push(
-		setTimeout(function () {
-			callback.bind(that)();
-		}, s)
-	);
+    this.timeouts.push(setTimeout(function () {
+        callback.bind(that)();
+    }, s));
 };
 Engine.prototype.showNumber = function () {
     if (this.i < this.series.length) {
         if (this.i != 0) {
-			$("#trainer").text((this.series[this.i] > 0) ? "+" + this.series[this.i] : this.series[this.i]);
-		} else {
-			$("#trainer").text(this.series[this.i]);
-		}
+            $("#trainer").text((this.series[this.i] > 0) ? "+" + this.series[this.i] : this.series[this.i]);
+        } else {
+            $("#trainer").text(this.series[this.i]);
+        }
         this.waitCallback(this.speed.value / 2, this.hideNumber);
     } else {
         this.running = false;
