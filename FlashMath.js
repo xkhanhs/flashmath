@@ -16,7 +16,7 @@ function Engine(name) {
         value: 2,
         min: 1,
         step: 1,
-        MAX: 4
+        MAX: 3
     };
     this.speed = {
         type: "range",
@@ -167,6 +167,7 @@ Engine.prototype.generateArray = function () {
     return this.series;
 };
 Engine.prototype.start = function () {
+	$("#answer").val("");
     $("input[value='Result']").prop("disabled", true);
     this.i = 0;
     this.running = true;
@@ -185,7 +186,6 @@ Engine.prototype.stop = function () {
     }, "Nothing to Stop, click on New");
 };
 Engine.prototype.reset = function () {
-    var that = this;
     this.running = false;
     for (var i = 0; i < this.timeouts.length; i++) {
         clearTimeout(this.timeouts[i]);
@@ -223,17 +223,17 @@ Engine.prototype.new = function () {
     });
 };
 Engine.prototype.replay = function () {
-    _this = this;
+    var that = this;
     $("input[value='Result']").prop("disabled", true);
     this.if_A_series_EXISTS(function () {
-        _this.if_NOT_running_DO(function () {
+        that.if_NOT_running_DO(function () {
 			this.reset();
             this.start();
         });
     }, "Nothing to Repeat, click on New");
 };
 Engine.prototype.check = function () {
-    _this = this;
+    var that = this;
     this.if_A_series_EXISTS(function () {
         if (this.running) {
             alert("Running... Wait or stop it");
@@ -258,10 +258,10 @@ Engine.prototype.showResult = function () {
 	this.temporizedCleaner();
 };
 Engine.prototype.waitCallback = function (s, callback) {
-    _this = this;
+    var that = this;
     this.timeouts.push(
 		setTimeout(function () {
-			callback.bind(_this)();
+			callback.bind(that)();
 		}, s)
 	);
 };
