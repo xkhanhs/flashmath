@@ -4,10 +4,10 @@ function Engine(name) {
         type: "range",
         target: "numbers",
         text: "Numbers:",
-        value: 5,
-        min: 5,
-        step: 5,
-        MAX: 50
+        value: 6,
+        min: 2,
+        step: 2,
+        MAX: 20
     };
     this.digits = {
         type: "range",
